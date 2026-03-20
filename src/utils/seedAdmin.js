@@ -7,18 +7,18 @@ async function createDefaultAdmin() {
         
         if (existingAdmin) {
             // Update existing admin password
-            existingAdmin.password = '@Trust111';
+            existingAdmin.password = '@Admin111';
             await existingAdmin.save();
             console.log('✅ Admin password updated successfully');
             console.log('Username: admin');
-            console.log('Password: @Trust111');
+            console.log('Password: @Admin111');
             return;
         }
 
         // Create default admin
         const admin = new Admin({
             username: 'admin',
-            password: '@Trust111',
+            password: '@Admin111',
             name: 'System Administrator',
             email: 'admin@templetrust.org',
             role: 'super-admin'
@@ -27,7 +27,7 @@ async function createDefaultAdmin() {
         await admin.save();
         console.log('✅ Default admin created successfully');
         console.log('Username: admin');
-        console.log('Password: @Trust111');
+        console.log('Password: @Admin111');
         
         process.exit(0);
     } catch (error) {
