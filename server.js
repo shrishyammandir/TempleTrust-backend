@@ -51,8 +51,10 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(cookieParser());
 
-// Static files
-app.use(express.static(path.join(__dirname, 'public')));
+// Static files (only in development when public folder exists)
+if (process.env.NODE_ENV !== 'production') {
+  app.use(express.static(path.join(__dirname, 'public')));
+}
 
 // MongoDB connection
 mongoose.connect(process.env.MONGODB_URI, {
@@ -69,50 +71,14 @@ app.use('/api/contact', contactRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/stats', statsRoutes);
 
-// Serve frontend pages
+// Health check
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
-
-app.get('/about', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'about.html'));
-});
-
-app.get('/donate', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'donate.html'));
-});
-
-app.get('/events', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'events.html'));
-});
-
-app.get('/contact', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'contact.html'));
-});
-
-app.get('/privacy-policy', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'privacy-policy.html'));
-});
-
-app.get('/terms-conditions', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'terms-conditions.html'));
-});
-
-app.get('/refund-policy', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'refund-policy.html'));
-});
-
-app.get('/admin', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'admin', 'login.html'));
-});
-
-app.get('/admin/dashboard', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'admin', 'dashboard.html'));
+  res.json({ success: true, message: 'TempleTrust API is running' });
 });
 
 // 404 handler
 app.use((req, res) => {
-  res.status(404).sendFile(path.join(__dirname, 'public', '404.html'));
+  res.status(404).json({ success: false, message: 'Route not found' });
 });
 
 // Error handling middleware
