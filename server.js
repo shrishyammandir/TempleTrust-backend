@@ -3,7 +3,6 @@ require('dotenv').config({ path: path.join(__dirname, '.env') });
 const express = require('express');
 const mongoose = require('mongoose');
 const helmet = require('helmet');
-const cors = require('cors');
 const compression = require('compression');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
