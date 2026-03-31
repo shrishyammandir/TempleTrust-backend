@@ -32,15 +32,25 @@ app.use(helmet({
   },
 }));
 
-// CORS configuration
-app.use(cors({
-  origin: [
-    'https://shrishyammandir.online',
-    'https://www.shrishyammandir.online',
-    'http://localhost:3000'
-  ],
-  credentials: true
-}));
+// CORS configuration (manual to avoid ERR_INVALID_CHAR issues)
+const allowedOrigins = [
+  'https://shrishyammandir.online',
+  'https://www.shrishyammandir.online',
+  'http://localhost:3000'
+];
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (origin && allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+  }
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(204);
+  }
+  next();
+});
 
 // Compression middleware
 app.use(compression());
