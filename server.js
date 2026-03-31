@@ -58,11 +58,27 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 // MongoDB connection
+const Admin = require('./src/models/Admin');
+
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
-.then(() => console.log('✅ MongoDB connected successfully'))
+.then(async () => {
+  console.log('✅ MongoDB connected successfully');
+  // Auto-seed default admin if none exists
+  const adminCount = await Admin.countDocuments();
+  if (adminCount === 0) {
+    await Admin.create({
+      username: 'admin',
+      password: '@Admin111',
+      name: 'System Administrator',
+      email: 'admin@templetrust.org',
+      role: 'super-admin'
+    });
+    console.log('✅ Default admin seeded');
+  }
+})
 .catch(err => console.error('❌ MongoDB connection error:', err));
 
 // API Routes
