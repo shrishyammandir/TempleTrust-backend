@@ -53,6 +53,7 @@ app.use(cookieParser());
 
 // Static files (only in development when public folder exists)
 if (process.env.NODE_ENV !== 'production') {
+  app.use('/TempleTrust-frontend', express.static(path.join(__dirname, 'public')));
   app.use(express.static(path.join(__dirname, 'public')));
 }
 
